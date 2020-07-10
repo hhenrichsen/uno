@@ -8,8 +8,8 @@ services:
     working_dir: /client
     volumes:
       - ./client:/client      
-    #command: npm run-script serve
-    command: bash -c "sleep infinity"
+    command: npm run-script install-serve
+    #command: bash -c "sleep infinity"
     ports:
       - 3000:3000
     environment:
@@ -30,9 +30,9 @@ services:
     command: gin --appPort 8080 --all -i run .
     #command: bash -c "sleep infinity"
 
-  db:
-    container_name: firestore-emulator
-    image: mtlynch/firestore-emulator
-    environment:
-      - FIRESTORE_PROJECT_ID=usu-devops
-      - PORT=1982
+#   db:
+#     container_name: firestore-emulator
+#     image: mtlynch/firestore-emulator
+#     environment:
+#       - FIRESTORE_PROJECT_ID=usu-devops
+#       - PORT=1982
