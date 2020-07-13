@@ -38,8 +38,17 @@ jobs:
 
     - name: Test
       working-directory: server
-      run: go test -v -race -coverprofile=coverage.txt -covermode=atomic .
+      run: go test -v -race -coverprofile=coverage.out -covermode=atomic .
+      
+    - name: Convert Coverage
+      uses: jandelgado/gcov2lcov-action@v1.0.2
+      with:
+        infile: ./server/coverage.out
+        outfile: ./server/coverage.lcov
         
     - name: Coverage
-      working-directory: server
-      run: bash <(curl -s https://codecov.io/bash)
+    - uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./server/coverage.lcov
+        
