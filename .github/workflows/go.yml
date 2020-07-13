@@ -41,13 +41,13 @@ jobs:
         working-directory: server
         run: |
           go test -v -race -coverprofile cover.out .
-          cat cover.out >> ../coverage.txt
+          cat cover.out >> coverage.txt
           
       - name: Upload coverage report
         uses: codecov/codecov-action@v1
         with:
           token: ${{secrets.CODECOV_TOKEN}}
-          file: ./coverage.txt
+          file: server/coverage.txt
         
   build:
     name: Build
