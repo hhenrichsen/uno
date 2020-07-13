@@ -22,7 +22,7 @@ jobs:
       - name: Lint
         run: |
           go get -u golang.org/x/lint/golint
-          glint -set_exit_status
+          golint -set_exit_status
     
   test:
     name: Test
