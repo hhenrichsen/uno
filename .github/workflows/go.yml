@@ -20,7 +20,10 @@ jobs:
         uses: actions/checkout@v2
         
       - name: Lint
-        uses: actions-contrib/golangci-lint@v1
+        uses: golangci/golangci-lint-action@v1
+        with:
+          version: v1.28
+          working-directory: server
     
   test:
     name: Test
@@ -38,7 +41,7 @@ jobs:
         working-directory: server
         run: |
           go test -v -race -coverprofile cover.out .
-          cat cover.out >> ../coverage.txt      
+          cat cover.out >> ../coverage.txt
           
       - name: Upload coverage report
         uses: codecov/codecov-action@v1
