@@ -7,16 +7,54 @@ on:
     branches: [ master, dev ]
 
 jobs:
-
-  build:
-    env:
-      GOPATH: ${{ github.workspace }}
-      GO111MODULE: off
-    name: Build
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
+      - name: Setup
+        uses: actions/setup-go@v1
+        with:
+          go-version: ^1.14
+          
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: Lint
+        run: |
+          go get -u golang.org/x/lint/golint
+          glint -set_exit_status
+    
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
+        uses: actions/setup-go@v1
+        with:
+          go-version: ^1.14
+          
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Set up Go 1.x
+      - name: Test
+        working-directory: server
+        run: |
+          go test -v -race -coverprofile cover.out .
+          cat cover.out >> ../coverage.txt      
+          
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{secrets.CODECOV_TOKEN}}
+          file: ./coverage.txt
+        
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+    steps:
+
+    - name: Setup
       uses: actions/setup-go@v2
       with:
         go-version: ^1.14
@@ -24,42 +62,17 @@ jobs:
 
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
-      with:
-        path: ./src/github.com/${{ github.repository }}
 
-    - name: Get dependencies
-      working-directory: ./src/github.com/${{ github.repository }}/server
-      run: |
-        go get -v -t -d ./...
-        if [ -f Gopkg.toml ]; then
-            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-            dep ensure
-        fi
-        
-    - uses: actions/cache@v2
-      with:
-        path: ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-
+
+#     - name: Get dependencies
+#       working-directory: server
+#       run: |
+#         go get -v -t -d ./...
+#         if [ -f Gopkg.toml ]; then
+#             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+#             dep ensure
+#         fi
 
     - name: Build
-      working-directory: ./src/github.com/${{ github.repository }}/server
+      working-directory: server
       run: go build -v .
-
-    - name: Test
-      working-directory: ./src/github.com/${{ github.repository }}/server
-      run: go test -v -race -coverprofile=coverage.out -covermode=atomic .
-      
-    - name: Coverage conversion
-      uses: jandelgado/gcov2lcov-action@v1.0.2
-      with:
-        infile: ./src/github.com/${{ github.repository }}/server/coverage.out
-        outfile: ./src/github.com/${{ github.repository }}/server/coverage.lcov
-        
-    - name: Coverage
-      uses: codecov/codecov-action@v1
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        file: ./src/github.com/${{ github.repository }}/server/coverage.lcov
-        
