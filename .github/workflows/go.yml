@@ -28,7 +28,7 @@ jobs:
         path: ./src/github.com/${{ github.repository }}
 
     - name: Get dependencies
-      working-directory: server
+      working-directory: ./src/github.com/${{ github.repository }}/server
       run: |
         go get -v -t -d ./...
         if [ -f Gopkg.toml ]; then
@@ -44,22 +44,22 @@ jobs:
           ${{ runner.os }}-go-
 
     - name: Build
-      working-directory: server
+      working-directory: ./src/github.com/${{ github.repository }}/server
       run: go build -v .
 
     - name: Test
-      working-directory: server
+      working-directory: ./src/github.com/${{ github.repository }}/server
       run: go test -v -race -coverprofile=coverage.out -covermode=atomic .
       
     - name: Coverage conversion
       uses: jandelgado/gcov2lcov-action@v1.0.2
       with:
-        infile: ./server/coverage.out
-        outfile: ./server/coverage.lcov
+        infile: ./src/github.com/${{ github.repository }}/server/coverage.out
+        outfile: ./src/github.com/${{ github.repository }}/server/coverage.lcov
         
     - name: Coverage
       uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        file: ./server/coverage.lcov
+        file: ./src/github.com/${{ github.repository }}/server/coverage.lcov
         
