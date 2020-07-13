@@ -40,7 +40,7 @@ jobs:
       - name: Test
         working-directory: server
         run: |
-          go test -v -race -coverprofile cover.out .
+          go test -v -race -coverprofile=cover.out -covermode=atomic .
           cat cover.out >> coverage.txt
           
       - name: Upload coverage report
