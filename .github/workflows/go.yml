@@ -40,14 +40,14 @@ jobs:
       working-directory: server
       run: go test -v -race -coverprofile=coverage.out -covermode=atomic .
       
-    - name: Convert Coverage
+    - name: Coverage conversion
       uses: jandelgado/gcov2lcov-action@v1.0.2
       with:
         infile: ./server/coverage.out
         outfile: ./server/coverage.lcov
         
     - name: Coverage
-    - uses: codecov/codecov-action@v1
+      uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         file: ./server/coverage.lcov
