@@ -40,8 +40,6 @@ jobs:
       working-directory: server
       run: go test -v -race -coverprofile=coverage.txt -covermode=atomic .
         
-    - name: Go Coverage
-      uses: codecov/codecov-action@v1
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        file: server/coverage.txt
+    - name: Coverage
+      working-directory: server
+      run: bash <(curl -s https://codecov.io/bash)
