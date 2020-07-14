@@ -52,7 +52,6 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: [lint, test]
     steps:
 
     - name: Setup
@@ -63,7 +62,6 @@ jobs:
 
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
-
 
 #     - name: Get dependencies
 #       working-directory: server
