@@ -56,19 +56,20 @@ jobs:
 
       - name: Test
         run: |
-          go test -v -race -coverprofile=../coverage.out -covermode=atomic
+          go test -v -race -coverprofile=/home/runner/work/uno/uno/coverage.out -covermode=atomic go/src/github.com/jak103/usu-uno
         env:
           GOPATH: /home/runner/work/uno/uno
       
       - uses: shogo82148/actions-goveralls@v1
         with:
-          path-to-profile: coverage.out
+          path-to-profile: /home/runner/work/uno/uno/coverage.out
         env:
           GOPATH: /home/runner/work/uno/uno
           
         
   build:
     name: Build
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
 
