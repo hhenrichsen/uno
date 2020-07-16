@@ -37,17 +37,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Get dependencies
+        working-directory: server
+        run: |
+          go get -v -t -d ./...
+          if [ -f Gopkg.toml ]; then
+              curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+              dep ensure
+          fi
+      
       - name: Test
         working-directory: server
         run: |
-          go test -v -race -coverprofile=cover.out -covermode=atomic .
-          cat cover.out >> coverage.txt
+          go test -v -race -coverprofile=coveragae.out -covermode=atomic .
           
+      - name: Convert coverage
+        uses: jandelgado/gcov2lcov-action@v1.0.2
+        with:
+          infile: server/coverage.out
+          outfile: server/coverage.lcov
+
       - name: Upload coverage report
         uses: codecov/codecov-action@v1
         with:
           token: ${{secrets.CODECOV_TOKEN}}
-          file: server/coverage.txt
+          file: server/coverage.lcov
           flags: server
         
   build:
@@ -64,14 +78,14 @@ jobs:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
 
-#     - name: Get dependencies
-#       working-directory: server
-#       run: |
-#         go get -v -t -d ./...
-#         if [ -f Gopkg.toml ]; then
-#             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-#             dep ensure
-#         fi
+    - name: Get dependencies
+      working-directory: server
+      run: |
+        go get -v -t -d ./...
+        if [ -f Gopkg.toml ]; then
+            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+            dep ensure
+        fi
 
     - name: Build
       working-directory: server

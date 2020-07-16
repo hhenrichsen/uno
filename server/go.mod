@@ -3,6 +3,7 @@ module github.com/jak103/usu-uno
 go 1.14
 
 require (
+	github.com/jandelgado/gcov2lcov v1.0.2 // indirect
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/labstack/echo/v4 v4.1.16
 	github.com/stretchr/testify v1.6.1
