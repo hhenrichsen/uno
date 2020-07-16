@@ -49,19 +49,19 @@ jobs:
       - name: Test
         working-directory: server
         run: |
-          go test -v -race -coverprofile=coveragae.out -covermode=atomic .
+          go test -v -race -coverprofile=../coveragae.out -covermode=atomic .
           
       - name: Convert coverage
         uses: jandelgado/gcov2lcov-action@v1.0.2
         with:
-          infile: server/coverage.out
-          outfile: server/coverage.lcov
+          infile: coverage.out
+          outfile: coverage.lcov
 
       - name: Upload coverage report
         uses: codecov/codecov-action@v1
         with:
           token: ${{secrets.CODECOV_TOKEN}}
-          file: server/coverage.lcov
+          file: coverage.lcov
           flags: server
         
   build:
