@@ -49,16 +49,17 @@ jobs:
 
       - name: Move server
         run: |
-          ls go/src/github.com/jak103
           mv go/src/github.com/jak103/server go/src/github.com/jak103/usu-uno
           mv src/go/src/github.com/jak103/server src/go/src/github.com/jak103/usu-uno
-          ls go/src/github.com/jak103
-    
-      - name: Debug
+
+      - name: Get dependencies
+        working-directory: server
         run: |
-          pwd
-          echo ${GOPATH}
-          echo ${GOROOT}
+          go get -v -t -d ./...
+          if [ -f Gopkg.toml ]; then
+              curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+              dep ensure
+          fi
 
       - name: Test
         run: |
