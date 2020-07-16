@@ -53,7 +53,7 @@ jobs:
           mv src/go/src/github.com/jak103/server src/go/src/github.com/jak103/usu-uno
 
       - name: Get dependencies
-        working-directory: server
+        working-directory: src/go/src/github.com/jak103/usu-uno
         run: |
           go get -v -t -d ./...
           if [ -f Gopkg.toml ]; then
