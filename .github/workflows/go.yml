@@ -32,6 +32,13 @@ jobs:
           
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          path: go/src/github.com/jak103/
+
+      - name: Move server
+        run: |
+          pwd
+          mv go/src/github.com/jak103/server go/src/github.com/jak103/usu-uno
       
       - name: Setup
         uses: actions/setup-go@v1
