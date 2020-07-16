@@ -29,30 +29,35 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
+          
+      - name: Checkout
+        uses: actions/checkout@v2
+      
       - name: Setup
         uses: actions/setup-go@v1
         with:
           go-version: ^1.14
-          
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-          
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-          path: /home/runner/go/src/github.com/jak103/usu-uno
-      
+        env:
+          GOPATH: /home/runner/work/uno/uno
+    
+      - name: Debug
+        run: |
+          pwd
+          echo ${GOPATH}
+          echo ${GOROOT}
+
       - name: Test
         working-directory: server
         run: |
           go test -v -race -coverprofile=../coverage.out -covermode=atomic .
+        env:
+          GOPATH: /home/runner/work/uno/uno
       
       - uses: shogo82148/actions-goveralls@v1
         with:
           path-to-profile: coverage.out
+        env:
+          GOPATH: /home/runner/work/uno/uno
           
         
   build:
