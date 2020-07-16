@@ -33,7 +33,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          path: go/src/github.com/jak103/
+          path: src/go/src/github.com/jak103/
       
       - name: Setup
         uses: actions/setup-go@v1
@@ -44,9 +44,11 @@ jobs:
 
       - name: Move server
         run: |
-          ls go/src/github.com/jak103
-          mv go/src/github.com/jak103/server go/src/github.com/jak103/usu-uno
-          ls go/src/github.com/jak103
+          echo OLD:
+          ls src/go/src/github.com/jak103
+          mv src/go/src/github.com/jak103/server src/go/src/github.com/jak103/usu-uno
+          echo NEW:
+          ls src/go/src/github.com/jak103
     
       - name: Debug
         run: |
@@ -56,7 +58,7 @@ jobs:
 
       - name: Test
         run: |
-          go test -v -race -coverprofile=/home/runner/work/uno/uno/coverage.out -covermode=atomic go/src/github.com/jak103/usu-uno
+          go test -v -race -coverprofile=/home/runner/work/uno/uno/coverage.out -covermode=atomic src/go/src/github.com/jak103/usu-uno
         env:
           GOPATH: /home/runner/work/uno/uno
       
