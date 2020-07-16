@@ -43,7 +43,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 1
-          path: go/src/github.com/jak103/usu-uno
+          path: /home/runner/go/src/github.com/jak103/usu-uno
       
       - name: Test
         working-directory: server
