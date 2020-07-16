@@ -67,14 +67,21 @@ jobs:
           go test -v -race -coverprofile=/home/runner/work/uno/uno/coverage.out -covermode=atomic go/src/github.com/jak103/usu-uno
         env:
           GOPATH: /home/runner/work/uno/uno
-      
-      - name: Coverage
-        uses: shogo82148/actions-goveralls@v1
+          
+      - name: Convert coverage
+        uses: jandelgado/gcov2lcov-action@v1.0.2
         with:
-          path-to-profile: /home/runner/work/uno/uno/coverage.out
+          infile: coverage.out
+          outfile: coverage.lcov
         env:
           GOPATH: /home/runner/work/uno/uno
-          
+        
+      - name: Publish coverage
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage.lcov
+
         
   build:
     name: Build
