@@ -68,7 +68,8 @@ jobs:
         env:
           GOPATH: /home/runner/work/uno/uno
       
-      - uses: shogo82148/actions-goveralls@v1
+      - name: Coverage
+        uses: shogo82148/actions-goveralls@v1
         with:
           path-to-profile: /home/runner/work/uno/uno/coverage.out
         env:
