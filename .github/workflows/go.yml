@@ -53,13 +53,14 @@ jobs:
           mv src/go/src/github.com/jak103/server src/go/src/github.com/jak103/usu-uno
 
       - name: Get dependencies
-        working-directory: go/src/github.com/jak103/usu-uno
         run: |
-          go get -v -t -d ./...
+          go get -v -t -d go/src/...
           if [ -f Gopkg.toml ]; then
               curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
               dep ensure
           fi
+        env:
+          GOPATH: /home/runner/work/uno/uno
 
       - name: Test
         run: |
