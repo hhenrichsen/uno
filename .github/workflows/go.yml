@@ -36,33 +36,18 @@ jobs:
           
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Get dependencies
-        working-directory: server
-        run: |
-          go get -v -t -d ./...
-          if [ -f Gopkg.toml ]; then
-              curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-              dep ensure
-          fi
+        with:
+          fetch-depth: 1
       
       - name: Test
         working-directory: server
         run: |
           go test -v -race -coverprofile=../coverage.out -covermode=atomic .
+      
+      - uses: shogo82148/actions-goveralls@v1
+        with:
+          path-to-profile: coverage.out
           
-      - name: Convert coverage
-        uses: jandelgado/gcov2lcov-action@v1.0.2
-        with:
-          infile: coverage.out
-          outfile: coverage.lcov
-
-      - name: Upload coverage report
-        uses: codecov/codecov-action@v1
-        with:
-          token: ${{secrets.CODECOV_TOKEN}}
-          file: coverage.lcov
-          flags: server
         
   build:
     name: Build
